@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -151,6 +152,7 @@
 
   </script>
 
+
   <div class="header">
     <h2>BlogPost</h2>
   </div>
@@ -203,6 +205,21 @@
 
 </body>
 <script>
+  function getimg(img) {
+    const arr = img.split("/");
+    var f = false;var ret = "";
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i] =='media'){
+        f = true;
+      }
+      if (f == true) {
+        ret += arr[i];
+        ret += '/';
+      }
+
+    }
+    return ret;
+  }
   function clean(s) {
     // console.log(s);
     var str = "";
@@ -263,7 +280,8 @@
       document.getElementById('blogtitle').innerHTML = response.title;
       document.getElementById('blogauthor').innerHTML = clean(response.created_at);
       document.getElementById('blogdata').innerHTML = response.content;
-      document.getElementById("blogimg").src = response.image;
+      var photo = getimg(response.image);
+      document.getElementById("blogimg").src = "{% stattic '" + photo +"' %}"
       document.getElementById('votecnt').innerHTML = response.votes;
       document.getElementById('cat').innerHTML = clean(response.created_at);
       var upat = date;

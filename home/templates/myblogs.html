@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -121,6 +122,21 @@
   </div>
 </body>
 <script>
+  function getimg(img) {
+    const arr = img.split("/");
+    var f = false;var ret = "";
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i] =='media'){
+        f = true;
+      }
+      if (f == true) {
+        ret += arr[i];
+        ret += '/';
+      }
+
+    }
+    return ret;
+  }
   $(function () {
     var myid;
     var token = sessionStorage.getItem('access');
@@ -169,7 +185,7 @@
 
             for (obj in myObj) {
               // console.log(myObj[obj]);
-              var photo = myObj[obj].image;
+              var photo = getimg(myObj[obj].image);
               var title = myObj[obj].title;
               var content = myObj[obj].content;
               var created_at = myObj[obj].created_at;
@@ -179,7 +195,7 @@
               // console.log(user, myid);
               if (user != myid) continue;
 
-              var temp = " <div class='card mb-3' > <div class='row g-0'> <div class='col-md-4'> <img src= " + photo + "  class='img-fluid' </div> </div> <div class='col-md-8'> <div class='card-body'> <h3 class='card-title'  onclick='GetBlog(\"" + id + "\")'> " + title + " </h3> <p class='card-text  text-muted text-truncate'> " + content + " </p> <p class='card-text'> <small class='text-muted'> </small></p> <div class='card-footer'> <div class='vote' style='display: inline-block; margin: 20px;'> <button type='button' onclick='VoteUp(\"" + id + "\")' class='btn btn-danger btn-circle btn-xl' style='background-color : blueviolet;'> <i class='fa fa-arrow-up' ></i> </button> <h5 id='numvotes" + id + "' style='color: blueviolet; text-align:center; margin:auto;'> " + votes + " </h5> </div> </div> <div><button type='button' id='craetebtn' class='btn btn-primary' style='margin : 10px;' onclick='GetUpdate(\"" + id + "\")'>Update</button><button type='button' id='deletebtn' class='btn btn-danger' style='margin : 10px;' onclick='GetDelete(\"" + id + "\")'>Delete</button></div> </div> </div> </div> </div> ";
+              var temp = " <div class='card mb-3' > <div class='row g-0'> <div class='col-md-4'> <img src= '{ % static \"" + photo + "\" %}'  class='img-fluid' </div> </div> <div class='col-md-8'> <div class='card-body'> <h3 class='card-title'  onclick='GetBlog(\"" + id + "\")'> " + title + " </h3> <p class='card-text  text-muted text-truncate'> " + content + " </p> <p class='card-text'> <small class='text-muted'> </small></p> <div class='card-footer'> <div class='vote' style='display: inline-block; margin: 20px;'> <button type='button' onclick='VoteUp(\"" + id + "\")' class='btn btn-danger btn-circle btn-xl' style='background-color : blueviolet;'> <i class='fa fa-arrow-up' ></i> </button> <h5 id='numvotes" + id + "' style='color: blueviolet; text-align:center; margin:auto;'> " + votes + " </h5> </div> </div> <div><button type='button' id='craetebtn' class='btn btn-primary' style='margin : 10px;' onclick='GetUpdate(\"" + id + "\")'>Update</button><button type='button' id='deletebtn' class='btn btn-danger' style='margin : 10px;' onclick='GetDelete(\"" + id + "\")'>Delete</button></div> </div> </div> </div> </div> ";
               $(".container").append(temp);
               // console.log(myObj[obj].tittle)
             }// var temp = " <div class='card mb-3'> <div class='row g-0'> <div class='col-md-4'> <img src='https://mdbootstrap.com/wp-content/uploads/2020/06/vertical.jpg' alt='...' class='img-fluid' / </div> <div class='col-md-8'> <div class='card-body'> <h5 class='card-title'>Card title</h5> <p class='card-text'> This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer. </p> <p class='card-text'> <small class='text-muted'>Last updated 3 mins ago</small></p> </div> </div> </div> </div> "
