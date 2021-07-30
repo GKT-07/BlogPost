@@ -28,7 +28,7 @@ urlpatterns = [
     path('froala_editor/', include('froala_editor.urls')),
 ]
 
-if settings.DEBUG:
+if True:
         urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
