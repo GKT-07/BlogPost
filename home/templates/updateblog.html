@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+    <!-- Website Title -->
+    <title>BlogPost</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <!-- <link href="/media/css/styles.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+        integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <link rel="text/css" href="media/css/styles.css">
+    <!-- <link href="C:\Users\Gaurav Tailor\Documents\Blog\Blog\public\static\css\styles.css" rel="stylesheet"> -->
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <style>
+        nav {
+            background-color: blueviolet;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-items: stretch;
+            justify-content: space-around;
+            /* padding: 50px 0; */
+        }
+
+        .card {
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            transition: 0.3s;
+            width: 800px;
+            /* height: 200px; */
+        }
+
+        .card:hover {
+            box-shadow: 0 12px 20px 0 rgba(0, 0, 0, 0.2);
+            width: 850px;
+
+        }
+    </style>
+</head>
+
+<body>
+    <!--Navbar -->
+    <nav class="mb-1 navbar navbar-expand-lg navbar-dark info-color">
+        <a class="navbar-brand" href="#">BlogPost</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-4"
+            aria-controls="navbarSupportedContent-4" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent-4">
+            <ul class="navbar-nav ml-auto">
+                
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-4" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-user"></i> Profile </a>
+                    <div class="dropdown-menu dropdown-menu-right dropdown-info"
+                        aria-labelledby="navbarDropdownMenuLink-4">
+                        <a class="dropdown-item" id="myaccount">My account</a>
+                        <a class="dropdown-item" id="createblog">Write Blog</a>
+                        <a class="dropdown-item" id="myblog">My Blogs</a>
+                        <a class="dropdown-item" id="logout">Log out</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-2">
+
+        <form method="post" id="cblog" class="mt-5 pt-5 mb-5 pb-5" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-md-12">
+                    <label>Enter blog title</label>
+                    <input type="text" id="tit" class="form-control" placeholder="Enter title" name="title">
+                    <input type="hidden" id="tok" class="form-control" placeholder="Enter title" name="access">
+                </div>
+
+                <div class="col-md-12" id="cont">
+                    {{form.media}}
+                    {{form.as_p}}
+                </div>
+
+                <div class="col-md-12">
+                    <p>Previous : </p>
+                    <img id="bimg" style="height: 250px; width: 250px;">
+                    <input id="blogimg" type="file" name="image" class="form-control">
+                </div>
+
+            </div>
+
+            <button id="create" type="submit" class="btn btn-primary mt-4">Update</button>
+
+        </form>
+    </div>
+</body>
+<script>
+    $(function () {
+        var token = sessionStorage.getItem('access');
+        document.getElementById('tok').value = token;
+        // console.log(sessionStorage.getItem('access'));
+        if (sessionStorage.getItem('access') === null) {
+            window.location.href = '';
+        }
+    })
+    $('#createblog').click(function (e) {
+        e.preventDefault();
+        window.location.href = 'createblog';
+
+    })
+    $('#myblog').click(function (e) {
+        e.preventDefault();
+        window.location.href = 'myblogs';
+
+    })
+    $('#myaccount').click(function (e) {
+        e.preventDefault();
+        window.location.href = 'myaccount';
+
+    })
+    $('#logout').click(function (e) {
+        e.preventDefault();
+        sessionStorage.clear();
+        window.location.href = 'logout';
+
+    })
+    var blogid = '{{blogid}}';
+    $(function () {
+        var token = sessionStorage.getItem('access');
+        if (token !== null) {
+            // console.log("token");
+            $.ajax({
+                type: 'POST',
+                url: 'auth/verify',
+                data: {
+                    token: token
+                },
+                success: function (response) {
+                    try {
+                        if (response.code == 'token_not_valid') {
+                            window.location.href = 'home';
+                        }
+                    } catch {
+                    }
+                },
+        error : function(response) {
+          sessionStorage.clear();
+        window.location.href = 'logout';
+      }
+            })
+        }
+        console.log("called");
+        $.ajax({
+            type: 'GET',
+            url: 'blogs/' + blogid + "/",
+            headers: {
+                'Authorization': 'Bearer ' + token
+            },
+            success: function (response) {
+                // console.log(response);
+                document.getElementById('tit').value = response.title;
+                var content = response.content;
+                document.getElementById('bimg').src = response.image;
+            },
+            error: function (response) {
+                console.log(response);
+            },
+            contentType: "application/json; charset=utf-8",
+            cache: false,
+            processData: false
+        })
+    })
+    $('#createblog').click(function (e) {
+        e.preventDefault();
+        window.location.href = 'createblog';
+
+    })
+    $('#myblog').click(function (e) {
+        e.preventDefault();
+        window.location.href = 'myblogs';
+
+    })
+    $('#myaccount').click(function (e) {
+        e.preventDefault();
+        window.location.href = 'myaccount';
+
+    })
+    $('#logout').click(function (e) {
+        e.preventDefault();
+        sessionStorage.clear();
+        window.location.href = 'logout';
+
+    })
+</script>

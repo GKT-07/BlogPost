@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+    <!-- Website Title -->
+    <title>BlogPost</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <!-- <link href="/media/css/styles.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+        integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+    <!-- <link href="C:\Users\Gaurav Tailor\Documents\Blog\Blog\public\static\css\styles.css" rel="stylesheet"> -->
+    <!-- JQuery -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+        }
+
+        body {
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" style="padding-top: 100px;">
+        <div>
+            <center><b style="font-size: 75px;">BlogPost</b></center>
+        </div>
+        <div class="text-center">
+            <a href="#" id='reg' class="btn btn-primary" style="margin: 25px; background-color: black;">Register</a>
+            <a href="#" id="log" class="btn btn-primary" style="margin: 25px; background-color: black;">LogIn</a>
+        </div>
+    </div>
+
+
+</body>
+<script>
+    $(function () {
+        var token = sessionStorage.getItem('access');
+        // console.log(token);
+        if (token !== null) {
+            // console.log("token");
+            $.ajax({
+                type: 'POST',
+                url: 'auth/verify',
+                data: {
+                    token: token
+                },
+                success: function (response) {
+                    try {
+                        if (response.code == 'token_not_valid') {
+                            // console.log("hi");
+                        } else {
+                            window.location.href = 'allblogs';
+                        }
+                    } catch {
+                        window.location.href = 'allblogs';
+                    }
+                }
+            })
+        }
+    })
+    $('#log').click(function (e) {
+        e.preventDefault();
+        window.location.href = "signin";
+
+    })
+    $('#reg').click(function (e) {
+        e.preventDefault();
+        window.location.href = "signup";
+
+    })
+</script>
