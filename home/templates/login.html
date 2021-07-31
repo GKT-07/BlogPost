@@ -85,7 +85,7 @@
     var token = sessionStorage.getItem('access');
     // console.log(token);
   if (token !== null) {
-    // console.log("token");
+    console.log("token");
     $.ajax({
       type : 'POST',
       url : 'auth/verify',
