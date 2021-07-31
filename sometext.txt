@@ -1,1 +1,3 @@
 <div><button type='button' id='craetebtn' class='btn btn-primary'>Update</button><button type='button' id='deletebtn' class='btn btn-danger'>Delete</button></div>
+
+web: gunicorn Blog.wsgi --log-file -

@@ -1,4 +1,4 @@
-{% load static %}
+<!-- {% load static %} -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -31,6 +31,7 @@
   <style>
     nav {
       background-color: blueviolet;
+      margin-top: 0px;
     }
 
     .container {
@@ -46,6 +47,7 @@
       box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
       transition: 0.3s;
       width: 800px;
+      margin: auto 0px;
     }
 
     .card:hover {
@@ -95,30 +97,49 @@
 <body>
   <!--Navbar -->
   <nav class="mb-1 navbar navbar-expand-lg navbar-dark info-color">
-    <a class="navbar-brand" href="allblogs">BlogPost</a>
+    <a class="navbar-brand" href="#">BlogPost</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent-4"
       aria-controls="navbarSupportedContent-4" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent-4">
-      <ul class="navbar-nav ml-auto">
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-4" data-toggle="dropdown" aria-haspopup="true"
-            aria-expanded="false">
-            <i class="fas fa-user"></i> Profile </a>
-          <div class="dropdown-menu dropdown-menu-right dropdown-info" aria-labelledby="navbarDropdownMenuLink-4">
-            <a class="dropdown-item" id="myaccount">My account</a>
-            <a class="dropdown-item" id="createblog">Write Blog</a>
-            <a class="dropdown-item" id="myblog">My Blogs</a>
-            <a class="dropdown-item" id="logout">Log out</a>
-          </div>
-        </li>
-      </ul>
-    </div>
+    
   </nav>
 
   <div class="container" style="display: flex;">
-
+    <main class="my-5">
+      <div class="container">
+        <!--Section: Content-->
+        <section class="text-center text-md-start">
+          {% for i in b %}
+          
+          <!-- Post -->
+          <div class="row" >
+            <div class="col-md-4 mb-4">
+              <div class="bg-image hover-overlay shadow-1-strong rounded ripple" data-mdb-ripple-color="light">
+                <img src="{% static i.photo %}" class="img-fluid" />
+                <a href="#!">
+                  <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
+                </a>
+              </div>
+            </div>
+  
+            <div class="col-md-8 mb-4">
+              <h5>{{i.title}}</h5>
+              <p>{{i.user}}</p>
+              <p style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                {{i.content | safe}}
+              </p>
+  
+              <button type="button" id="auth{{i.id}}" onclick="GetBlog('{{i.id}}')" class="btn btn-primary">Read</button>
+              <button type="button" id="numvotes{{i.id}}" onclick='VoteUp("{{i.id}}")' class="btn btn-primary"><i class='fa fa-arrow-up'></i> {{i.votes}}</button>
+              <button type="button" id="auth{{i.id}}" onclick="GetUpdate('{{i.id}}')" class="btn btn-primary">Update</button>
+              <button type="button" id="auth{{i.id}}" onclick="GetDelete('{{i.id}}')" class="btn btn-danger">Delete</button>
+            </div>
+          </div>
+          <hr>
+          {% endfor %}
+        </section>
+      </main>
   </div>
 </body>
 <script>
@@ -162,59 +183,8 @@
       }
       })
     }
-    $.ajax({
-      type: "GET",
-      url: "register/" + 6 + "/aboutme",
-      dataType: 'json',
-      headers: {
-        'Authorization': 'Bearer ' + token
-      },
-      success: function (response) {
-        myid = response.id;
-        // console.log(myid);
-        $.ajax({
-          type: "GET",
-          url: "blogs",
-          dataType: 'json',
-          headers: {
-            'Authorization': 'Bearer ' + token
-          },
-          success: function (response) {
-            var myObj = JSON.parse(JSON.stringify(response));
-
-
-            for (obj in myObj) {
-              // console.log(myObj[obj]);
-              var photo = getimg(myObj[obj].image);
-              var title = myObj[obj].title;
-              var content = myObj[obj].content;
-              var created_at = myObj[obj].created_at;
-              var id = myObj[obj].id;
-              var votes = myObj[obj].votes;
-              var user = myObj[obj].user;
-              // console.log(user, myid);
-              if (user != myid) continue;
-
-              var temp = " <div class='card mb-3' > <div class='row g-0'> <div class='col-md-4'> <img src= '{ % static \"" + photo + "\" %}'  class='img-fluid' </div> </div> <div class='col-md-8'> <div class='card-body'> <h3 class='card-title'  onclick='GetBlog(\"" + id + "\")'> " + title + " </h3> <p class='card-text  text-muted text-truncate'> " + content + " </p> <p class='card-text'> <small class='text-muted'> </small></p> <div class='card-footer'> <div class='vote' style='display: inline-block; margin: 20px;'> <button type='button' onclick='VoteUp(\"" + id + "\")' class='btn btn-danger btn-circle btn-xl' style='background-color : blueviolet;'> <i class='fa fa-arrow-up' ></i> </button> <h5 id='numvotes" + id + "' style='color: blueviolet; text-align:center; margin:auto;'> " + votes + " </h5> </div> </div> <div><button type='button' id='craetebtn' class='btn btn-primary' style='margin : 10px;' onclick='GetUpdate(\"" + id + "\")'>Update</button><button type='button' id='deletebtn' class='btn btn-danger' style='margin : 10px;' onclick='GetDelete(\"" + id + "\")'>Delete</button></div> </div> </div> </div> </div> ";
-              $(".container").append(temp);
-              // console.log(myObj[obj].tittle)
-            }// var temp = " <div class='card mb-3'> <div class='row g-0'> <div class='col-md-4'> <img src='https://mdbootstrap.com/wp-content/uploads/2020/06/vertical.jpg' alt='...' class='img-fluid' / </div> <div class='col-md-8'> <div class='card-body'> <h5 class='card-title'>Card title</h5> <p class='card-text'> This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer. </p> <p class='card-text'> <small class='text-muted'>Last updated 3 mins ago</small></p> </div> </div> </div> </div> "
-
-          },
-          error: function (response) {
-            // console.log(response);
-          }
-
-        })
-      },
-      error: function (response) {
-        // console.log(response);
-      }
-    })
-
-
   })
-
+    
   function GetBlog(id) {
     var str = 'openblog/' + id;
     // console.log(str)
@@ -277,7 +247,7 @@
       },
       success: function (response) {
         // console.log(response);
-        document.getElementById('numvotes' + id).innerHTML = response.votes;
+        document.getElementById('numvotes' + id).innerHTML = "<i class='fa fa-arrow-up'></i>" + response.votes;
       },
       error: function (response) {
         // console.log(response);

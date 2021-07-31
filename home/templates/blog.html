@@ -129,21 +129,7 @@
       aria-controls="navbarSupportedContent-4" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent-4">
-      <ul class="navbar-nav ml-auto">
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-4" data-toggle="dropdown" aria-haspopup="true"
-            aria-expanded="false">
-            <i class="fas fa-user"></i> Profile </a>
-          <div class="dropdown-menu dropdown-menu-right dropdown-info" aria-labelledby="navbarDropdownMenuLink-4">
-            <a class="dropdown-item" id="myaccount">My account</a>
-            <a class="dropdown-item" id="createblog">Write Blog</a>
-            <a class="dropdown-item" id="myblog">My Blogs</a>
-            <a class="dropdown-item" id="logout">Log out</a>
-          </div>
-        </li>
-      </ul>
-    </div>
+    
   </nav>
   <script>
 
@@ -161,26 +147,24 @@
     <div class="leftcolumn">
       <div class="card">
         <div class="heading">
-          <h2 id="blogtitle">TITLE HEADING</h2>
+          <h2 id="blogtitle">{{title}}</h2>
           <div class="vote">
             <button type="button" id="upvotebtn" style="align-self: center; background-color: blueviolet;"
               class="btn btn-danger btn-circle btn-xl">
               <i class="fa fa-arrow-up"></i>
             </button>
-            <h5 id="votecnt" style="color: blueviolet;">1222222222</h5>
+            <h5 id="votecnt" style="color: blueviolet;">{{votes}}</h5>
           </div>
 
         </div>
 
-        <h5 id="blogauthor">Title description, Dec 7, 2017</h5>
+        <h5 id="blogauthor">{{author}}</h5>
         <img id='blogimg'
-          src="https://www.bing.com/th?id=OIP.wf1zvDosuuq2r0UCi_uPNQHaB6&w=307&h=100&c=8&rs=1&qlt=90&o=6&dpr=1.5&pid=3.1&rm=2"
+          src="{% static photo %}"
           alt="">
         <!-- <div class="fakeimg"  style="height:200px; background-repeat: no-repeat; background-image: url(https://images.pexels.com/photos/6913400/pexels-photo-6913400.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500);"></div> -->
         <p></p>
-        <p id="blogdata">Sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed
-          do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-          exercitation ullamco.</p>
+        <p id="blogdata">{{content | safe}}</p>
       </div>
     </div>
     <div class="rightcolumn">
@@ -237,6 +221,8 @@
     }
     return str;
   }
+
+
   $(function () {
     var token = sessionStorage.getItem('access');
     if (token !== null) {
@@ -267,52 +253,15 @@
 
   var blogid = '{{blogid}}';
   var token = sessionStorage.getItem('access');
-  $.ajax({
-    type: 'GET',
-    url: 'blogs/' + blogid + "/",
-    headers: {
-      'Authorization': 'Bearer ' + token
-    },
-    success: function (response) {
-      // console.log(response.image);
-      var id = response.id;
-      var date = clean(response.created_at);
-      document.getElementById('blogtitle').innerHTML = response.title;
-      document.getElementById('blogauthor').innerHTML = clean(response.created_at);
-      document.getElementById('blogdata').innerHTML = response.content;
-      var photo = getimg(response.image);
-      document.getElementById("blogimg").src = "{% stattic '" + photo +"' %}"
-      document.getElementById('votecnt').innerHTML = response.votes;
-      document.getElementById('cat').innerHTML = clean(response.created_at);
-      var upat = date;
-      if (clean(response.updated_at)) upat = clean(response.updated_at);
-      document.getElementById('uat').innerHTML = upat;
-      var user = response.user;
-      $.ajax({
-        type: "GET",
-        url: "register/" + user,
-        dataType: 'json',
-        headers: {
-          'Authorization': 'Bearer ' + token
-        },
-        success: function (response) {
-          username = response.username;
-          document.getElementById('blogauthor').innerHTML = 'by ' + username;
-        },
-        error: function (response) {
-          // console.log(response);
-        }
-      })
-    },
-    error: function (response) {
-      // console.log(response);
-      sessionStorage.clear();
-        window.location.href = 'logout';
-    }
-  })
-
+  var date = clean('{{created_at}}');
+  document.getElementById('cat').innerHTML = date;
+  var upat = date;
+  if (clean('{{updated_at}}')) upat = clean('{{updated_at}}');
+  document.getElementById('uat').innerHTML = upat;
+  
   $('#upvotebtn').click(function () {
     console.log('VoteUp');
+    var token = sessionStorage.getItem('access');
     let cookie = document.cookie
     let csrfToken = cookie.substring(cookie.indexOf('=') + 1)
     $.ajax({

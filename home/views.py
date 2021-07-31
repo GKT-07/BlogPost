@@ -4,7 +4,7 @@ from django.shortcuts import render,  redirect
 from .serializer import BlogModelSerializer, UserSerializer
 from .models import BlogModel
 from rest_framework.response import Response
-from rest_framework import generics, status, viewsets
+from rest_framework import generics, serializers, status, viewsets
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.permissions import IsAuthenticated
@@ -32,10 +32,35 @@ def myaccount(request):
     return render(request, 'account.html')
 
 def allblogs(request):
-    return render(request, 'index.html')
+    blogs = BlogModel.objects.all()
+    b = list()
+    ids = list()
+    titles = list()
+    contents = list()
+    users = list()
+    votes = list()
+    for i in blogs:
+        b.append({
+            'id' : i.id,
+            'photo' : i.image,
+            'title' : i.title,
+            'content' : i.content,
+            'user' : i.user.username,
+            'votes' : i.votes
+        })
+        ids.append(i.id)
+        titles.append(i.title)
+        contents.append(i.content)
+        users.append(i.user.username)
+        votes.append(i.votes)
+    length = len(ids)
+    return render(request, 'index.html', context={'ids' : ids, 'titles' : titles, 'contents' : contents, 'users' : users, 'votes' : votes, 'len' : length, 'b' : b})
     
 def openblog(request, id):
-    return render(request, 'blog.html', context={"blogid" : id})
+    blog = BlogModel.objects.filter(id=id)
+    print(blog[0])
+    blog = blog[0]
+    return render(request, 'blog.html', context={"blogid" : id, "votes" : blog.votes, "title" : blog.title, "content" : blog.content, "author" : blog.user.username, "created_at" : blog.created_at, "updated_at" : blog.upload_to, "photo" : blog.image})
 
 def getuser(request):
     authorization_heaader = request.headers.get('Authorization')
@@ -106,8 +131,27 @@ def createblog(request):
         print(e)
     return render(request, 'createblog.html', context={'form' : BlogForm})
 
-def myblogs(request):
-    return render(request, 'myblogs.html')
+def myblogs(request, id):
+    blogs = BlogModel.objects.all()
+    b = list()
+    ids = list()
+    titles = list()
+    contents = list()
+    users = list()
+    votes = list()
+    # print(blogs)
+    for i in blogs:
+        if i.user.id == id: 
+            b.append({
+                'id' : i.id,
+                'photo' : i.image,
+                'title' : i.title,
+                'content' : i.content,
+                'user' : i.user.username,
+                'votes' : i.votes
+            })
+    length = len(b)
+    return render(request, 'myblogs.html', context={ 'len' : length, 'b' : b})
 
 
 class BlogModelListView(generics.ListAPIView, generics.CreateAPIView):
